@@ -1,0 +1,82 @@
+/* --- Header --- */
+header {
+    background-color: var(--bg-secondary);
+    padding: 10px var(--content-padding);
+    display: flex;
+    justify-content: space-between; /* Keep space-between */
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative; /* For filter menu positioning */
+}
+
+.search-btn,
+.filter-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: var(--text-secondary);
+    padding: 5px;
+}
+
+.search-btn:hover,
+.filter-btn:hover {
+    color: var(--text-primary);
+}
+
+/* Filter Menu */
+.filter-menu {
+    position: absolute;
+    top: 100%;
+    left: 0; /* Align to the left in RTL */
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    z-index: 1001;
+    width: 150px;
+    padding: 5px 0;
+}
+
+.filter-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 15px;
+    background: none;
+    border: none;
+    text-align: right;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.filter-menu button:hover {
+    background-color: var(--bg-secondary);
+}
+
+/* Back link in header on detail pages */
+.back-link-header {
+    color: var(--text-secondary);
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+.back-link-header:hover {
+     color: var(--text-primary);
+} 

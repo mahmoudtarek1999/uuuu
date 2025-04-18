@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين - المنصة</title>
+
+    <!-- Google Fonts (Cairo for Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="cards.css">
+    <link rel="stylesheet" href="bottom-nav.css">
+    <link rel="stylesheet" href="panels.css">
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="pages.css">
+    <link rel="stylesheet" href="forms.css">
+    <link rel="stylesheet" href="responsive.css"> <!-- Responsive styles last -->
+
+    <style>
+        /* أنماط خاصة بصفحة إدارة المستخدمين */
+        .admin-page-container {
+            padding: 20px var(--content-padding);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .admin-page-title {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .users-table-container {
+            overflow-x: auto;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table th, 
+        .users-table td {
+            text-align: right;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .users-table th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .users-table tr:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .user-role {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .role-admin {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .role-publisher {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #fd7e14;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .role-user {
+            background-color: rgba(13, 110, 253, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(13, 110, 253, 0.3);
+        }
+        
+        .user-action-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .user-action-btn:hover {
+            color: var(--primary-hover);
+        }
+        
+        .user-action-btn.delete {
+            color: #dc3545;
+        }
+        
+        .user-action-btn.delete:hover {
+            color: #b02a37;
+        }
+        
+        .edit-role-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-role-container {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .edit-role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .edit-role-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .close-edit-role-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .role-radio-group {
+            margin-bottom: 20px;
+        }
+        
+        .role-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .role-option input[type="radio"] {
+            margin-left: 10px;
+        }
+        
+        .role-option-label {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .role-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .role-description {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+        
+        .edit-role-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .cancel-edit-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .save-role-btn {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+        }
+        
+        .no-users-message {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+        
+        /* إضافة دعم للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .users-table th, 
+            .users-table td {
+                padding: 8px 10px;
+            }
+            
+            .admin-page-title {
+                font-size: 1.5rem;
+            }
+            
+            .user-role {
+                font-size: 0.75rem;
+                padding: 3px 8px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .users-table .email-column {
+                display: none;
+            }
+        }
+    </style>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="firebase-init.js"></script>
+    <script type="module" src="admin-users.js" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">المنصة</a>
+        <div class="header-actions">
+            <a href="index.html" class="back-btn" aria-label="العودة">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="admin-page-container">
+        <h1 class="admin-page-title">إدارة المستخدمين</h1>
+        
+        <div class="users-table-container">
+            <div class="loading-indicator">جاري تحميل بيانات المستخدمين...</div>
+            <table class="users-table hidden">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th class="email-column">البريد الإلكتروني</th>
+                        <th>الدور</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <!-- سيتم ملء هذا الجزء ديناميكيًا عبر JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- قسم طلبات صلاحيات النشر -->
+        <h2 class="section-title mt-4">طلبات صلاحيات النشر</h2>
+        <div class="publisher-requests-container">
+            <div class="loading-indicator" id="publisher-requests-loading">جاري تحميل طلبات صلاحيات النشر...</div>
+            <table class="publisher-requests-table hidden">
+                <thead>
+                    <tr>
+                        <th>الاسم الكامل</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الشركة</th>
+                        <th>تاريخ الطلب</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="publisher-requests-body">
+                    <!-- سيتم ملء هذا الجزء ديناميكيًا عبر JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item" aria-label="الرئيسية" id="home-btn">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="profile.html" id="profile-action-btn" class="nav-item" aria-label="الملف الشخصي">
+            <i class="fas fa-user"></i>
+            <span>ملفي</span>
+        </a>
+        <button class="nav-item post-btn" aria-label="نشر" id="add-item-btn">
+             <i class="fas fa-plus"></i>
+         </button>
+        <button class="nav-item" aria-label="الإشعارات" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+            <span>الإشعارات</span>
+        </button>
+        <button class="nav-item menu-btn active" aria-label="القائمة" id="menu-btn">
+            <i class="fas fa-bars"></i>
+            <span>القائمة</span>
+        </button>
+    </nav>
+
+    <!-- Side Menu Panel (Initially Hidden) -->
+    <div class="side-menu-overlay hidden"></div>
+    <aside class="side-menu hidden">
+        <div class="side-menu-header">
+            <h3>القائمة</h3>
+            <button class="close-side-menu-btn" aria-label="إغلاق القائمة">&times;</button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="articles.html" class="side-menu-item">
+                <i class="fas fa-newspaper fa-fw"></i>
+                <span>المقالات</span>
+            </a>
+            <a href="jobs.html" class="side-menu-item">
+                <i class="fas fa-briefcase fa-fw"></i>
+                <span>الوظائف</span>
+            </a>
+            <a href="admin-users.html" class="side-menu-item active" data-role="admin">
+                <i class="fas fa-users-cog fa-fw"></i>
+                <span>إدارة المستخدمين</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Edit Role Modal (Initially Hidden) -->
+    <div class="modal-overlay hidden" id="edit-role-overlay"></div>
+    <div class="modal hidden" id="edit-role-modal">
+        <div class="modal-header">
+            <h3>تعديل دور المستخدم</h3>
+            <button class="close-modal-btn" id="close-edit-role-btn" aria-label="إغلاق">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="edit-role-form">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label>الدور الجديد</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="role-user" name="role" value="user">
+                            <label for="role-user">مستخدم</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="role-publisher" name="role" value="publisher">
+                            <label for="role-publisher">ناشر</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="role-admin" name="role" value="admin">
+                            <label for="role-admin">مسؤول</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-edit-btn">إلغاء</button>
+                    <button type="submit" class="btn-primary save-role-btn">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add other panels from the template (Notifications, etc.) -->
+
+</body>
+</html> 

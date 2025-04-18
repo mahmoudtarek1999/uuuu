@@ -1,0 +1,232 @@
+/* --- Page Specific Layouts --- */
+
+/* General Page Title (e.g., on articles.html, jobs.html) */
+.page-title {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Back Link (Common on detail pages) */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.back-link:hover {
+    text-decoration: none;
+    background-color: rgba(13, 110, 253, 0.2);
+    transform: translateX(5px);
+}
+
+.back-link i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.back-link:hover i {
+    transform: translateX(-4px);
+}
+
+/* --- Article Detail Page --- */
+.article-full-content {
+    padding: 20px var(--content-padding);
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.article-full-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.article-full-content .meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+ .article-full-content .meta span {
+     display: inline-flex;
+     align-items: center;
+     gap: 5px;
+ }
+
+.article-full-content p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 1em;
+}
+
+/* --- Job Detail Page --- */
+.job-detail-content {
+    padding: 20px var(--content-padding);
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.job-detail-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.job-detail-content .company-name {
+     font-size: 1.1rem;
+     color: var(--text-secondary);
+     margin-bottom: 15px;
+     display: block;
+}
+
+.job-detail-content .job-meta-details {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px 15px;
+}
+
+ .job-detail-content .job-meta-details span {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+ }
+
+  .job-detail-content .job-meta-details i {
+     color: var(--text-muted);
+     width: 15px;
+     text-align: center;
+ }
+
+.job-detail-content .job-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+  .job-detail-content .job-summary h2 {
+     font-size: 1.3rem;
+     margin-bottom: 10px;
+     color: var(--text-primary);
+ }
+
+.job-detail-content p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 1em;
+}
+
+.mt-4 {
+    margin-top: 2rem;
+}
+
+/* تنسيق طلبات صلاحيات النشر */
+.publisher-requests-container {
+    margin-top: 1rem;
+    overflow-x: auto;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.publisher-requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.publisher-requests-table th,
+.publisher-requests-table td {
+    padding: 12px 15px;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.publisher-requests-table th {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.publisher-requests-table tbody tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.publisher-requests-table .request-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.publisher-requests-table .status-pending {
+    background-color: var(--warning-bg);
+    color: var(--warning-color);
+}
+
+.publisher-requests-table .status-approved {
+    background-color: var(--success-bg);
+    color: var(--success-color);
+}
+
+.publisher-requests-table .status-rejected {
+    background-color: var(--error-bg);
+    color: var(--error-color);
+}
+
+.publisher-requests-table .request-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.publisher-requests-table .approve-btn,
+.publisher-requests-table .reject-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease;
+}
+
+.publisher-requests-table .approve-btn {
+    background-color: var(--success-bg);
+    color: var(--success-color);
+}
+
+.publisher-requests-table .reject-btn {
+    background-color: var(--error-bg);
+    color: var(--error-color);
+}
+
+.publisher-requests-table .approve-btn:hover {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.publisher-requests-table .reject-btn:hover {
+    background-color: var(--error-color);
+    color: white;
+} 

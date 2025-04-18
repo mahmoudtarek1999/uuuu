@@ -1,0 +1,55 @@
+:root {
+    /* Dark Theme Colors */
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #888;
+    --border-color: #3a3a3a;
+    --primary-color: #0d6efd;
+    --primary-hover: #0a58ca;
+    --primary-color-rgb: 13, 110, 253;
+    --shadow-color: rgba(255, 255, 255, 0.05);
+    --unread-bg: #2a3b4d;
+    --modal-overlay-bg: rgba(0, 0, 0, 0.7);
+    --content-padding: 15px;
+    
+    /* Alert Colors */
+    --success-color: #28a745;
+    --success-color-rgb: 40, 167, 69;
+    --success-bg: rgba(40, 167, 69, 0.15);
+    --warning-color: #ffc107;
+    --warning-color-rgb: 255, 193, 7;
+    --warning-bg: rgba(255, 193, 7, 0.15);
+    --error-color: #dc3545;
+    --error-color-rgb: 220, 53, 69;
+    --error-bg: rgba(220, 53, 69, 0.15);
+}
+
+/* --- General Styles --- */
+body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    direction: rtl;
+    padding-bottom: 80px; /* Space for fixed bottom nav */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: 1200px; /* Or your preferred max width */
+    margin: 0 auto;
+    padding-left: var(--content-padding);
+    padding-right: var(--content-padding);
+}
+
+.hidden {
+    display: none !important;
+} 

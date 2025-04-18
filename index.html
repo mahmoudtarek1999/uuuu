@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الوظائف والمقالات</title>
+
+    <!-- Google Fonts (Cairo for Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="cards.css">
+    <link rel="stylesheet" href="bottom-nav.css">
+    <link rel="stylesheet" href="panels.css">
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="responsive.css"> <!-- Responsive styles last -->
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="firebase-init.js"></script>
+    <!-- We need to import script.js as a module too now -->
+    <script type="module" src="script.js" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">المنصة</a>
+        <div class="header-actions">
+            <!-- Filter Button & Menu -->
+            <div style="position: relative;">
+                <button class="filter-btn" aria-label="فلتر">
+                    <i class="fas fa-filter"></i>
+                </button>
+                <div class="filter-menu hidden">
+                    <button data-filter="all">الكل</button>
+                    <button data-filter="articles">مقالات</button>
+                    <button data-filter="jobs">وظائف</button>
+                </div>
+            </div>
+            <!-- Search Button -->
+            <button class="search-btn" aria-label="بحث">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <div class="content-grid">
+            <!-- Static content removed. Content will be loaded dynamically from Firebase -->
+            <p class="loading-indicator">جاري تحميل المحتوى...</p> <!-- Loading indicator -->
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active" aria-label="الرئيسية" id="home-btn">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="#" id="profile-action-btn" class="nav-item" aria-label="الملف الشخصي">
+            <i class="fas fa-user"></i>
+            <span>ملفي</span>
+        </a>
+        <button class="nav-item post-btn" aria-label="نشر" id="add-item-btn">
+             <i class="fas fa-plus"></i>
+         </button>
+        <button class="nav-item" aria-label="الإشعارات" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+            <span>الإشعارات</span>
+        </button>
+        <button class="nav-item menu-btn" aria-label="القائمة" id="menu-btn">
+            <i class="fas fa-bars"></i>
+            <span>القائمة</span>
+        </button>
+    </nav>
+
+    <!-- Notifications Panel (Initially Hidden) -->
+    <div class="notifications-overlay hidden"></div>
+    <aside class="notifications-panel hidden">
+        <div class="notifications-header">
+            <h3>الإشعارات</h3>
+            <button class="close-notifications-btn" aria-label="إغلاق الإشعارات">&times;</button>
+        </div>
+        <div class="notifications-list">
+            <!-- Example Notification Items (Icons Removed) -->
+            <div class="notification-item unread">
+                <!-- Icon Image Removed -->
+                <div class="notification-content">
+                    <p><strong>تم نشر وظيفة جديدة:</strong> مصمم جرافيك في شركة إبداع.</p>
+                    <span class="notification-time">منذ 5 دقائق</span>
+                </div>
+            </div>
+            <div class="notification-item">
+                 <!-- Icon Image Removed -->
+                <div class="notification-content">
+                    <p>قام <strong>أحمد علي</strong> بالتعليق على مقالك "اتجاهات التسويق".</p>
+                    <span class="notification-time">منذ 30 دقيقة</span>
+                </div>
+            </div>
+            <div class="notification-item">
+                  <!-- Icon Image Removed -->
+                <div class="notification-content">
+                    <p>تم قبول طلبك لوظيفة <strong>مطور واجهات أمامية</strong>.</p>
+                    <span class="notification-time">منذ ساعتين</span>
+                </div>
+            </div>
+             <div class="notification-item unread">
+                 <!-- Icon Image Removed -->
+                <div class="notification-content">
+                    <p><strong>تذكير:</strong> مقابلة وظيفة مسؤول تسويق غدًا الساعة 10 صباحًا.</p>
+                    <span class="notification-time">أمس</span>
+                </div>
+            </div>
+            <!-- Add more notification items here -->
+        </div>
+    </aside>
+
+    <!-- Authentication Modal (New) -->
+    <div class="auth-modal-overlay hidden" id="auth-modal-overlay"></div>
+    <div class="auth-modal hidden" id="auth-modal">
+        <div class="auth-modal-header">
+            <h3 id="auth-modal-title">الوصول إلى حسابك</h3>
+            <button class="close-auth-modal-btn" id="close-auth-modal-btn" aria-label="إغلاق">&times;</button>
+        </div>
+        <div class="auth-modal-body">
+            <!-- Initial Choice -->
+            <div id="auth-choice">
+                <p>هل لديك حساب بالفعل؟</p>
+                <button class="btn btn-primary btn-block" id="show-login-form-btn">تسجيل الدخول</button>
+                <p class="auth-separator"><span>أو</span></p>
+                <button class="btn btn-secondary btn-block" id="show-signup-form-btn">إنشاء حساب جديد</button>
+            </div>
+
+            <!-- Login Form (Hidden Initially) -->
+            <form id="login-form" class="auth-form hidden">
+                <h4>تسجيل الدخول</h4>
+                <div class="form-group">
+                    <label for="login-email">البريد الإلكتروني</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">كلمة السر</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
+                <p class="switch-auth">
+                    ليس لديك حساب؟ <a href="#" id="switch-to-signup">أنشئ حسابًا</a>
+                </p>
+            </form>
+
+            <!-- Signup Form (Hidden Initially) -->
+            <form id="signup-form" class="auth-form hidden">
+                <h4>إنشاء حساب جديد</h4>
+                <div class="form-group">
+                    <label for="signup-name">الاسم</label>
+                    <input type="text" id="signup-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">البريد الإلكتروني</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">كلمة السر</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password-confirm">تأكيد كلمة السر</label>
+                    <input type="password" id="signup-password-confirm" name="password_confirmation" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">إنشاء الحساب</button>
+                 <p class="switch-auth">
+                    لديك حساب بالفعل؟ <a href="#" id="switch-to-login">سجل الدخول</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Side Menu Panel (Initially Hidden) -->
+    <div class="side-menu-overlay hidden"></div>
+    <aside class="side-menu hidden">
+        <div class="side-menu-header">
+            <h3>القائمة</h3>
+            <button class="close-side-menu-btn" aria-label="إغلاق القائمة">&times;</button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="articles.html" class="side-menu-item">
+                <i class="fas fa-newspaper fa-fw"></i>
+                <span>المقالات</span>
+            </a>
+            <a href="jobs.html" class="side-menu-item">
+                <i class="fas fa-briefcase fa-fw"></i>
+                <span>الوظائف</span>
+            </a>
+            <a href="#settings" class="side-menu-item"> <!-- Placeholder for settings -->
+                <i class="fas fa-cog fa-fw"></i>
+                <span>الإعدادات</span>
+            </a>
+            <a href="#" class="side-menu-item" id="request-publisher-btn">
+                <i class="fas fa-user-edit fa-fw"></i>
+                <span>الحصول على صلاحيات النشر</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Add Item Modal (Initially Hidden) -->
+    <div class="add-item-overlay hidden"></div>
+    <div class="add-item-modal hidden">
+        <div class="add-item-header">
+            <h3>ماذا تريد أن تنشر؟</h3>
+            <button class="close-add-item-btn" aria-label="إغلاق">&times;</button>
+        </div>
+        <div class="add-item-options">
+            <button class="add-option-btn" data-action="add-article">
+                <i class="fas fa-newspaper"></i>
+                <span>إضافة مقالة</span>
+            </button>
+            <button class="add-option-btn" data-action="add-job">
+                <i class="fas fa-briefcase"></i>
+                <span>إضافة وظيفة</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Publisher Request Modal (Initially Hidden) -->
+    <div class="modal-overlay hidden" id="publisher-request-overlay"></div>
+    <div class="modal hidden" id="publisher-request-modal">
+        <div class="modal-header">
+            <h3>طلب صلاحيات النشر</h3>
+            <button class="close-modal-btn" id="close-publisher-request-btn" aria-label="إغلاق">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-description">يمكنك التقديم للحصول على صلاحيات نشر الوظائف والمقالات على المنصة. سيتم مراجعة طلبك من قبل المسؤولين.</p>
+            
+            <form id="publisher-request-form">
+                <div class="form-group">
+                    <label for="fullName">الاسم الكامل</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="أدخل اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label for="company">الشركة / المؤسسة</label>
+                    <input type="text" id="company" name="company" required placeholder="أدخل اسم الشركة التي تعمل بها">
+                </div>
+                <div class="form-group">
+                    <label for="requestReason">سبب الطلب</label>
+                    <textarea id="requestReason" name="requestReason" rows="3" placeholder="اشرح باختصار لماذا تريد صلاحيات النشر؟"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-publisher-request-btn">إلغاء</button>
+                    <button type="submit" class="btn-primary" id="submit-publisher-request-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال الطلب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

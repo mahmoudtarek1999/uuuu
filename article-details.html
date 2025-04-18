@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المقالة - المنصة</title>
+
+    <!-- Google Fonts (Cairo for Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="pages.css">
+    <link rel="stylesheet" href="responsive.css">
+
+    <style>
+        .article-container {
+            padding: 20px var(--content-padding);
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .article-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .article-content {
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            white-space: pre-line;
+        }
+        
+        .article-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            flex-direction: column;
+        }
+        
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">المنصة</a>
+        <div class="header-actions">
+            <a href="index.html" class="back-link-header" aria-label="العودة للرئيسية" style="color: var(--text-secondary); font-size: 1.4rem;"><i class="fas fa-arrow-right"></i></a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+        
+        <div id="article-content-container">
+            <!-- هنا سيتم عرض محتوى المقالة ديناميكياً -->
+            <div class="loading-container">
+                <div class="loader"></div>
+                <p>جاري تحميل المقالة...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Import Firebase modules -->
+    <script type="module">
+        // استيراد وحدات فايربيز
+        import { app, auth, db, storage } from './firebase-init.js';
+        import { 
+            doc, 
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // الحصول على معرف المقالة من عنوان URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = urlParams.get('id');
+        const articleContainer = document.getElementById('article-content-container');
+
+        // التحقق من وجود معرف المقالة
+        if (!articleId) {
+            displayError('لم يتم تحديد معرف المقالة في الرابط');
+        } else {
+            // تحميل بيانات المقالة من فايربيز
+            loadArticleDetails(articleId);
+        }
+
+        // عرض رسالة خطأ
+        function displayError(message) {
+            articleContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // تنسيق التاريخ
+        function formatDate(timestamp) {
+            if (!timestamp) return 'تاريخ غير متوفر';
+            
+            try {
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                return date.toLocaleDateString('ar-EG', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            } catch (e) {
+                console.error('خطأ في تنسيق التاريخ:', e);
+                return 'تاريخ غير متوفر';
+            }
+        }
+
+        // تحميل تفاصيل المقالة
+        async function loadArticleDetails(id) {
+            try {
+                // جلب وثيقة المقالة من فايربيز
+                const docRef = doc(db, "articles", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    // استخراج بيانات المقالة
+                    const articleData = docSnap.data();
+                    
+                    // تحديث عنوان الصفحة
+                    document.title = `${articleData.title} - المنصة`;
+                    
+                    // إنشاء عنصر HTML لعرض المقالة
+                    const articleHTML = `
+                        <div class="article-container">
+                            <div class="article-header">
+                                <h1 class="article-title">${articleData.title || 'بدون عنوان'}</h1>
+                                <div class="article-meta">
+                                    <span><i class="fas fa-user"></i> ${articleData.authorName || 'مستخدم مجهول'}</span>
+                                    <span><i class="fas fa-calendar-alt"></i> ${formatDate(articleData.createdAt)}</span>
+                                </div>
+                            </div>
+                            
+                            ${articleData.imageUrl ? `<img src="${articleData.imageUrl}" alt="${articleData.title}" class="article-image">` : ''}
+                            
+                            <div class="article-content">${articleData.content || 'لا يوجد محتوى للمقالة'}</div>
+                        </div>
+                    `;
+                    
+                    // عرض المقالة في الصفحة
+                    articleContainer.innerHTML = articleHTML;
+                    
+                } else {
+                    // المقالة غير موجودة
+                    displayError('المقالة غير موجودة أو تم حذفها');
+                }
+                
+            } catch (error) {
+                console.error('خطأ في جلب تفاصيل المقالة:', error);
+                displayError('حدث خطأ أثناء جلب المقالة. يرجى المحاولة مرة أخرى لاحقاً');
+            }
+        }
+    </script>
+
+</body>
+</html> 

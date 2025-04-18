@@ -1,0 +1,100 @@
+/* --- Bottom Navigation Bar --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    height: 65px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 -2px 5px var(--shadow-color);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 0.7rem;
+    padding: 5px 0;
+    cursor: pointer;
+    background: none;
+    border: none;
+    position: relative;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-item i {
+    font-size: 1.6rem;
+    margin-bottom: 3px;
+    transition: transform 0.2s ease;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    color: var(--primary-color);
+}
+
+/* تحسين تأثير النقر على الأزرار */
+.nav-item:active {
+    transform: scale(0.9);
+}
+
+.nav-item:active i {
+    transform: scale(0.9);
+}
+
+/* تحسين وضوح الزر النشط */
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 30%;
+    right: 30%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+/* Prominent Post Button */
+.post-btn {
+    background-color: var(--primary-color);
+    color: white !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -20px;
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.4);
+    border: 3px solid var(--bg-secondary);
+    flex: 0 0 auto;
+    margin: 0 10px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.post-btn i {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+}
+
+.post-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
+}
+
+/* تحسين تأثير النقر على زر الإضافة */
+.post-btn:active {
+    transform: translateY(-1px) scale(0.95);
+} 

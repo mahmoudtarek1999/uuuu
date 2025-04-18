@@ -1,0 +1,169 @@
+/* --- Add Form Styles --- */
+.add-form-container {
+    padding: 20px var(--content-padding);
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.add-form-container h1 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    align-self: flex-start;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea {
+    width: 90%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: block;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Specific height for article content textarea */
+#add-article-form .form-group textarea {
+    min-height: 100px;
+}
+
+.submit-btn {
+    display: block;
+    width: 90%;
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+/* قواعد استجابة الشاشة للنماذج */
+@media (max-width: 768px) {
+    .add-form-container {
+        padding: 15px var(--content-padding);
+    }
+    
+    .add-form-container h1 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .form-group textarea {
+        min-height: 80px;
+    }
+    
+    #add-article-form .form-group textarea {
+        min-height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .add-form-container {
+        padding: 10px var(--content-padding);
+        margin-top: 12px;
+    }
+    
+    .add-form-container h1 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 8px;
+    }
+    
+    .form-group label {
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group textarea,
+    .submit-btn {
+        width: 85%;
+    }
+    
+    .form-group textarea,
+    #add-article-form .form-group textarea {
+        min-height: 60px;
+    }
+}
+
+@media (max-width: 320px) {
+    .add-form-container h1 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    .form-group {
+        margin-bottom: 6px;
+    }
+    
+    .form-group label {
+        font-size: 0.7rem;
+        margin-bottom: 1px;
+        width: 90%;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group textarea,
+    .submit-btn {
+        width: 90%;
+    }
+    
+    .form-group textarea,
+    #add-article-form .form-group textarea {
+        min-height: 50px;
+    }
+    
+    .submit-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }
+} 

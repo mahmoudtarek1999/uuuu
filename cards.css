@@ -1,0 +1,136 @@
+/* --- Main Content --- */
+main {
+     padding-top: 15px;
+     padding-bottom: 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+/* --- Card Styles (Common) --- */
+.card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    color: var(--text-primary);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px var(--shadow-color);
+    border-color: #555;
+}
+
+.card-content {
+    padding: 12px var(--content-padding); /* Adjusted padding */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow content to take available space */
+}
+
+/* --- Article Card Specific --- */
+.article-card .card-image {
+    display: none;
+}
+
+.article-card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    margin-top: 0;
+    color: var(--text-primary);
+}
+
+.article-card .card-description {
+    display: none;
+}
+
+.article-card .article-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-bottom: 12px;
+    justify-content: flex-start;
+}
+
+.article-card .article-meta span {
+     display: inline-flex;
+     align-items: center;
+     gap: 4px;
+}
+
+.article-card .article-meta i {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+/* --- Job Card Specific --- */
+.job-card .card-content {
+    /* Padding handled by common .card-content */
+}
+
+.job-card .card-title {
+     font-size: 1.05rem;
+     margin-bottom: 8px;
+     font-weight: 600;
+     margin-top: 0;
+     color: var(--text-primary);
+}
+
+.job-card-info {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.job-card-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.job-card-info i {
+    color: var(--text-muted);
+    width: 12px;
+    text-align: center;
+}
+
+.job-meta-grid {
+    display: none;
+}
+
+/* --- Read More Button (Common for Cards) --- */
+.read-more-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: auto; /* Push button to the bottom */
+    align-self: flex-start; /* Align button to the start (right in RTL) */
+    text-decoration: none;
+    border: none;
+}
+
+.read-more-btn:hover {
+    background-color: var(--primary-hover);
+    color: white;
+} 

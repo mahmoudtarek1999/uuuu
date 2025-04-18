@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الوظيفة - المنصة</title>
+
+    <!-- Google Fonts (Cairo for Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="pages.css">
+    <link rel="stylesheet" href="responsive.css">
+
+    <style>
+        .job-container {
+            padding: 20px var(--content-padding);
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .job-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .job-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8f8f8;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .job-info {
+            margin-bottom: 20px;
+        }
+        
+        .job-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .job-info-item i {
+            margin-left: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .job-summary {
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            white-space: pre-line;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            flex-direction: column;
+        }
+        
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">المنصة</a>
+        <div class="header-actions">
+            <a href="index.html" class="back-link-header" aria-label="العودة للرئيسية" style="color: var(--text-secondary); font-size: 1.4rem;"><i class="fas fa-arrow-right"></i></a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <a href="jobs.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة لصفحة الوظائف</a>
+        
+        <div id="job-content-container">
+            <!-- هنا سيتم عرض محتوى الوظيفة ديناميكياً -->
+            <div class="loading-container">
+                <div class="loader"></div>
+                <p>جاري تحميل الوظيفة...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Import Firebase modules -->
+    <script type="module">
+        // استيراد وحدات فايربيز
+        import { app, auth, db, storage } from './firebase-init.js';
+        import { 
+            doc, 
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // الحصول على معرف الوظيفة من عنوان URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get('id');
+        const jobContainer = document.getElementById('job-content-container');
+
+        // التحقق من وجود معرف الوظيفة
+        if (!jobId) {
+            displayError('لم يتم تحديد معرف الوظيفة في الرابط');
+        } else {
+            // تحميل بيانات الوظيفة من فايربيز
+            loadJobDetails(jobId);
+        }
+
+        // عرض رسالة خطأ
+        function displayError(message) {
+            jobContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // تنسيق التاريخ
+        function formatDate(timestamp) {
+            if (!timestamp) return 'تاريخ غير متوفر';
+            
+            try {
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                return date.toLocaleDateString('ar-EG', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            } catch (e) {
+                console.error('خطأ في تنسيق التاريخ:', e);
+                return 'تاريخ غير متوفر';
+            }
+        }
+
+        // تحميل تفاصيل الوظيفة
+        async function loadJobDetails(id) {
+            try {
+                // جلب وثيقة الوظيفة من فايربيز
+                const docRef = doc(db, "jobs", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    // استخراج بيانات الوظيفة
+                    const jobData = docSnap.data();
+                    
+                    // تحديث عنوان الصفحة
+                    document.title = `${jobData.title} - ${jobData.companyName} - المنصة`;
+                    
+                    // إنشاء عنصر HTML لعرض الوظيفة
+                    const jobHTML = `
+                        <div class="job-container">
+                            <div class="job-header">
+                                ${jobData.logoUrl ? `<img src="${jobData.logoUrl}" alt="${jobData.companyName}" class="company-logo">` : ''}
+                                <h1 class="job-title">${jobData.title || 'وظيفة غير محددة'}</h1>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-user"></i> ${jobData.publisherName || 'مستخدم مجهول'}</span>
+                                    <span><i class="fas fa-calendar-alt"></i> ${formatDate(jobData.createdAt)}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-info">
+                                <div class="job-info-item">
+                                    <i class="fas fa-building"></i>
+                                    <span>${jobData.companyName || 'الشركة غير محددة'}</span>
+                                </div>
+                                <div class="job-info-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${jobData.location || 'الموقع غير محدد'}</span>
+                                </div>
+                                ${jobData.phone ? `
+                                <div class="job-info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${jobData.phone}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            ${jobData.summary ? `
+                            <div class="job-summary">
+                                <h3>وصف الوظيفة:</h3>
+                                <p>${jobData.summary}</p>
+                            </div>
+                            ` : ''}
+                            
+                            ${jobData.phone ? `
+                            <a href="tel:${jobData.phone}" class="contact-button">
+                                <i class="fas fa-phone"></i> اتصل للتقديم
+                            </a>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    // عرض الوظيفة في الصفحة
+                    jobContainer.innerHTML = jobHTML;
+                    
+                } else {
+                    // الوظيفة غير موجودة
+                    displayError('الوظيفة غير موجودة أو تم حذفها');
+                }
+                
+            } catch (error) {
+                console.error('خطأ في جلب تفاصيل الوظيفة:', error);
+                displayError('حدث خطأ أثناء جلب الوظيفة. يرجى المحاولة مرة أخرى لاحقاً');
+            }
+        }
+    </script>
+
+</body>
+</html> 

@@ -1,0 +1,200 @@
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    /* Switch to single column layout for content grid */
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    :root {
+        --content-padding: 12px;
+    }
+    /* Other adjustments */
+    .bottom-nav {
+        height: 60px;
+    }
+    .nav-item i {
+        font-size: 1.4rem;
+    }
+     .post-btn {
+        width: 55px;
+        height: 55px;
+        top: -18px;
+    }
+    .post-btn i {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 600px) {
+     /* Further reduce padding on small phones */
+     :root {
+        --content-padding: 10px;
+    }
+     /* Ensure content grid is 1 column */
+     .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Fine-tuning for very small screens */
+     .logo {
+        font-size: 1.3rem;
+    }
+     .search-btn,
+    .filter-btn {
+        font-size: 1.2rem;
+    }
+    .header-actions {
+        gap: 10px;
+    }
+     .article-card .card-title {
+        font-size: 1rem;
+    }
+     .job-card .card-title {
+        font-size: 1rem;
+    }
+     .article-card .article-meta {
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+    }
+     .read-more-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+    .job-card-info {
+        font-size: 0.75rem;
+    }
+    .filter-menu {
+        left: 5px;
+        width: 130px;
+    }
+     .notifications-panel {
+        width: 90%;
+    }
+     .add-item-options {
+        padding: 20px var(--content-padding);
+        gap: 10px;
+        flex-direction: column; /* Stack options vertically */
+    }
+    .add-option-btn {
+        width: 100%;
+        padding: 15px;
+    }
+     .add-option-btn i {
+        font-size: 1.8rem;
+    }
+     .add-option-btn span {
+        font-size: 0.9rem;
+    }
+    /* Form adjustments */
+    .add-form-container h1 {
+        font-size: 1.4rem;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group textarea {
+        font-size: 0.95rem;
+        padding: 8px;
+    }
+    .submit-btn {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+    /* Page adjustments */
+    .article-full-content h1,
+    .job-detail-content h1 {
+        font-size: 1.5rem;
+    }
+     .article-full-content .meta,
+     .job-detail-content .job-meta-details {
+         font-size: 0.8rem;
+     }
+     .job-detail-content .company-name {
+         font-size: 1rem;
+     }
+     .article-full-content p,
+    .job-detail-content p {
+        font-size: 0.9rem;
+    }
+    
+    /* تعديلات إضافية للنماذج المنبثقة */
+    .auth-modal-body {
+        padding: 0 3px;
+    }
+    
+    .auth-modal-header, .modal-header {
+        padding: 6px 8px;
+        margin-bottom: 6px;
+        border-bottom-width: 1px;
+    }
+    
+    .modal-body {
+        padding: 8px;
+    }
+    
+    /* تعديل أزرار القائمة في النماذج */
+    .auth-modal-body .btn, 
+    .modal-body .btn-primary, 
+    .modal-body .btn-secondary {
+        margin-bottom: 5px;
+    }
+    
+    /* تعديل نموذج طلب صلاحيات النشر */
+    #publisher-request-modal .form-group textarea {
+        min-height: 40px;
+    }
+    
+    /* تحسين عرض أنماط الأخطاء */
+    .error-message {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        margin-bottom: 8px;
+    }
+    
+    /* تقليل حجم زر الإغلاق */
+    .close-modal-btn, .close-auth-modal-btn, .close-add-item-btn {
+        font-size: 1.3rem;
+    }
+    
+    /* تصغير النصوص في النماذج */
+    .modal-body p, .auth-modal-body p {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+    
+    /* تعديل خاص بنموذج التسجيل */
+    #signup-form .form-group, #login-form .form-group {
+        margin-bottom: 4px;
+    }
+    
+    /* تقليص المسافات في نموذج طلب صلاحيات النشر */
+    #publisher-request-modal .form-actions {
+        margin-top: 8px;
+    }
+}
+
+/* المزيد من التعديلات للشاشات الأصغر */
+@media (max-width: 360px) {
+    .auth-modal-header, .modal-header {
+        padding: 5px 7px;
+    }
+    
+    .modal-body, .auth-modal-body {
+        padding: 6px 5px;
+    }
+    
+    .form-group {
+        margin-bottom: 4px;
+    }
+    
+    #publisher-request-modal .form-group textarea {
+        min-height: 35px;
+    }
+    
+    .auth-modal-body .btn, 
+    .modal-body .btn-primary, 
+    .modal-body .btn-secondary {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+    }
+} 

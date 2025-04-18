@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المقالات - المنصة</title>
+
+    <!-- Google Fonts (Cairo for Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="cards.css">
+    <link rel="stylesheet" href="pages.css">  <!-- Page specific layouts -->
+    <link rel="stylesheet" href="responsive.css"> <!-- Responsive styles last -->
+
+    <style>
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+         .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header (Same as index.html) -->
+     <header>
+        <a href="index.html" class="logo">المنصة</a>
+        <div class="header-actions">
+             <a href="index.html" class="back-link-header" aria-label="العودة للرئيسية" style="color: var(--text-secondary); font-size: 1.4rem;"><i class="fas fa-arrow-right"></i></a>
+             <!-- Add search/filter if needed -->
+        </div>
+    </header>
+
+    <!-- Main Articles List Area -->
+    <main class="container">
+         <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+         <h1 class="page-title">المقالات المنشورة</h1>
+
+        <div class="content-grid">
+            <!-- المقالات ستظهر هنا عند جلبها من Firebase -->
+            <p class="loading-indicator">جاري تحميل المقالات...</p>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="firebase-init.js"></script>
+    
+    <!-- Articles Script -->
+    <script type="module">
+        // استيراد الدوال والمتغيرات اللازمة من Firebase
+        import { app, auth, db } from './firebase-init.js';
+        import { 
+            collection, 
+            getDocs, 
+            query, 
+            orderBy, 
+            limit, 
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentGrid = document.querySelector('.content-grid');
+            const loadingIndicator = document.querySelector('.loading-indicator');
+            
+            // دالة إظهار مؤشر التحميل
+            function showLoadingIndicator() {
+                if (loadingIndicator) loadingIndicator.style.display = 'block';
+            }
+            
+            // دالة إخفاء مؤشر التحميل
+            function hideLoadingIndicator() {
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+            }
+            
+            // دالة إنشاء بطاقة مقالة
+            function renderArticleCard(articleData) {
+                const data = articleData;
+                const id = data.id;
+                
+                let dateString = 'تاريخ غير متوفر';
+                if (data.createdAt && data.createdAt.toDate) {
+                    try {
+                        dateString = data.createdAt.toDate().toLocaleDateString('ar-EG', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    } catch (e) {
+                        console.error("خطأ في تنسيق التاريخ:", e);
+                    }
+                }
+                
+                return `
+                <article class="card article-card" data-id="${id}">
+                    <div class="card-content">
+                        <h2 class="card-title">${data.title || 'عنوان غير متوفر'}</h2>
+                        <div class="card-meta article-meta">
+                            <span><i class="fas fa-user"></i> ${data.authorName || 'غير محدد'}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${dateString}</span>
+                        </div>
+                        <a href="article-details.html?id=${id}" class="read-more-btn">اقرأ المزيد</a>
+                    </div>
+                </article>
+                `;
+            }
+            
+            // دالة جلب المقالات من Firebase
+            async function loadArticles() {
+                if (!contentGrid) return;
+                
+                showLoadingIndicator();
+                contentGrid.innerHTML = '<p class="loading-indicator">جاري تحميل المقالات...</p>';
+                
+                try {
+                    console.log("جاري جلب المقالات من Firebase...");
+                    const articlesRef = collection(db, "articles");
+                    const articlesQuery = query(articlesRef, orderBy("createdAt", "desc"), limit(20));
+                    const articlesSnapshot = await getDocs(articlesQuery);
+                    
+                    let articlesHTML = '';
+                    let articlesCount = 0;
+                    
+                    articlesSnapshot.forEach((doc) => {
+                        console.log("تم العثور على مقالة:", doc.id, doc.data());
+                        articlesHTML += renderArticleCard({ id: doc.id, ...doc.data() });
+                        articlesCount++;
+                    });
+                    
+                    hideLoadingIndicator();
+                    
+                    if (articlesCount > 0) {
+                        contentGrid.innerHTML = articlesHTML;
+                    } else {
+                        contentGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">لا توجد مقالات منشورة حالياً.</p>';
+                    }
+                    
+                } catch (error) {
+                    console.error("خطأ في جلب المقالات:", error);
+                    contentGrid.innerHTML = '<p style="text-align: center; color: red; padding: 20px;">حدث خطأ أثناء تحميل المقالات. يرجى المحاولة مرة أخرى.</p>';
+                } finally {
+                    hideLoadingIndicator();
+                }
+            }
+            
+            // تنفيذ دالة جلب المقالات عند تحميل الصفحة
+            loadArticles();
+        });
+    </script>
+
+    <!-- Optional: Add Bottom Navigation if needed -->
+    <!-- <nav class="bottom-nav"> ... </nav> -->
+
+     <!-- Link script if needed for future interactions on this page -->
+     <!-- <script src="script.js"></script> -->
+
+</body>
+</html> 
